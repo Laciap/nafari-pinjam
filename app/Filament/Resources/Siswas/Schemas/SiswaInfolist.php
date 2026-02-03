@@ -2,8 +2,12 @@
 
 namespace App\Filament\Resources\Siswas\Schemas;
 
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use PhpParser\Node\Stmt\Label;
+use Filament\Support\Icons\Heroicon;
+use Filament\Schemas\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ImageEntry;
 
 class SiswaInfolist
 {
@@ -11,18 +15,41 @@ class SiswaInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('user_id')
-                    ->numeric(),
-                TextEntry::make('kelas_id')
-                    ->numeric(),
-                TextEntry::make('nisn'),
-                TextEntry::make('phone_number'),
-                TextEntry::make('gender'),
-                TextEntry::make('profile_picture'),
-                TextEntry::make('created_at')
-                    ->dateTime(),
-                TextEntry::make('updated_at')
-                    ->dateTime(),
-            ]);
+
+                Section::make()
+
+                    ->schema([
+                        ImageEntry::make('profile_picture')
+                            ->disk('public')
+                            ->imageHeight(200)
+                            ->hiddenLabel()
+                            ->alignCenter(),
+                    ])->columnSpan(1),
+
+                Section::make()
+
+                    ->schema([
+                        TextEntry::make('user.name')
+                            ->label('Nama Siswa')
+                            ->icon(Heroicon::UserCircle),
+                        TextEntry::make('nisn')
+                            ->label('nisn')
+                            ->icon(Heroicon::Identification),
+                        TextEntry::make('kelas.name')
+                            ->label('kelas')
+                            ->icon(Heroicon::BuildingOffice),
+
+                        TextEntry::make('phone_number')
+                            ->label('nomor telephone')
+                            ->icon(Heroicon::Phone),
+                        TextEntry::make('gender')
+                            ->label('gender')
+                            ->badge(),
+                    ])->columnSpan(2)
+                    ->columns(3),
+
+
+
+            ])->columns(3);
     }
 }
