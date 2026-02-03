@@ -26,7 +26,7 @@ class SiswaResource extends Resource
     protected static string|BackedEnum|null $activeNavigationIcon = 'heroicon-s-academic-cap';
     protected static string|UnitEnum|null $navigationGroup = 'Student Management';
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $recordTitleAttribute = 'id';
 
     public static function form(Schema $schema): Schema
     {
