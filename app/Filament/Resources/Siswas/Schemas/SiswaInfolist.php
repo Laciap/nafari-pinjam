@@ -16,7 +16,7 @@ class SiswaInfolist
         return $schema
             ->components([
 
-                Section::make()
+                Section::make('Foto Profil')
 
                     ->schema([
                         ImageEntry::make('profile_picture')
@@ -26,7 +26,7 @@ class SiswaInfolist
                             ->alignCenter(),
                     ])->columnSpan(1),
 
-                Section::make()
+                Section::make('Informasi Siswa')
 
                     ->schema([
                         TextEntry::make('user.name')
@@ -38,13 +38,17 @@ class SiswaInfolist
                         TextEntry::make('kelas.name')
                             ->label('kelas')
                             ->icon(Heroicon::BuildingOffice),
+                        TextEntry::make('gender')
+                            ->label('gender')
+                            ->badge(),
 
                         TextEntry::make('phone_number')
                             ->label('nomor telephone')
                             ->icon(Heroicon::Phone),
-                        TextEntry::make('gender')
-                            ->label('gender')
-                            ->badge(),
+                        TextEntry::make('address')
+                            ->label('Alamat')
+                            ->icon(Heroicon::MapPin),
+
                     ])->columnSpan(2)
                     ->columns(3),
 
