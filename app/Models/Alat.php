@@ -17,6 +17,8 @@ class Alat extends Model
     'lost_qty',
     'borrowed_qty',
     'is_available',
+    'image',
+    'description',
     ];
 
     public function Category()
