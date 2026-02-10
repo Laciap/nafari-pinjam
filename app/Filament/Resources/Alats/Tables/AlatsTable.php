@@ -2,13 +2,19 @@
 
 namespace App\Filament\Resources\Alats\Tables;
 
+use App\Models\Category;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class AlatsTable
@@ -17,59 +23,72 @@ class AlatsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image')
-                ->disk('public')
-                ->imageSize(50),
-                TextColumn::make('category.name')
-                    ->label('Category')
-                    ->sortable(),
-                TextColumn::make('name')
-                    ->label('Nama')
-                    ->searchable(),
-                TextColumn::make('code')
-                    ->label('Code')
-                    ->searchable(),
-                TextColumn::make('total_qty')
-                    ->label('Total')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('good_qty')
-                    ->label('Bagus')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('damaged_qty')
-                    ->label('Rusak')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('borrowed_qty')
-                    ->label('Dipinjam')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('lost_qty')
-                    ->label('Hilang')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('available_qty')
-                    ->label('Tersedia')
-                    ->numeric()
-                    ->sortable(),
+                ColumnGroup::make('Detail Alat', [
+                    ImageColumn::make('image')
+                        ->disk('public')
+                        ->imageSize(50),
+                    TextColumn::make('name')
+                        ->label('Nama Alat')
+                        ->searchable(),
+                    TextColumn::make('code')
+                        ->label('Code')
+                        ->searchable(),
+                    TextColumn::make('category.name')
+                        ->label('Category')
+                        ->toggleable(isToggledHiddenByDefault: true),
+                ]),
+                ColumnGroup::make('Kondisi Alat / Stock', [
+
+                    TextColumn::make('good_qty')
+                        ->label('Bagus')
+                        ->numeric(),
+                    TextColumn::make('damaged_qty')
+                        ->label('Rusak')
+                        ->numeric(),
+                    TextColumn::make('borrowed_qty')
+                        ->label('Dipinjam')
+                        ->numeric(),
+                    TextColumn::make('lost_qty')
+                        ->label('Hilang')
+                        ->numeric(),
+                    TextColumn::make('total_qty')
+                        ->label('Total')
+                        ->numeric(),
+                    TextColumn::make('available_qty')
+                        ->label('Tersedia')
+                        ->numeric()
+                        ->getStateUsing(fn($record)=>$record->good_qty - $record->borrowed_qty)
+                        ->badge(),
+                ]),
+
+
                 IconColumn::make('is_available')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
+
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
+
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name'),
+                TernaryFilter::make('is_available')
+                    ->label('Ketersediaan')
+
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ])
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

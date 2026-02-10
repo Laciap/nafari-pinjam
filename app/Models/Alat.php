@@ -8,21 +8,27 @@ class Alat extends Model
 {
     protected $fillable = [
 
-    'category_id',
-    'name',
-    'code',
-    'total_qty',
-    'good_qty',
-    'damaged_qty',
-    'lost_qty',
-    'borrowed_qty',
-    'is_available',
-    'image',
-    'description',
+        'category_id',
+        'name',
+        'code',
+        'total_qty',
+        'good_qty',
+        'damaged_qty',
+        'lost_qty',
+        'borrowed_qty',
+        'is_available',
+        'image',
+        'description',
     ];
 
     public function Category()
     {
         return $this->belongsTo(Category::class);
     }
+    public function tickets()
+    {
+
+        return $this->hasMany(Ticket::class);
+    }
+
 }
