@@ -15,6 +15,8 @@ class Ticket extends Model
         'borrowed_at',
         'due_at',
         'returned_at',
+        'status',
+        'note',
     ];
 
     public function user(){

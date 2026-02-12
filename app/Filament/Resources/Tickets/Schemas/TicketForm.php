@@ -4,7 +4,10 @@ namespace App\Filament\Resources\Tickets\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class TicketForm
@@ -13,23 +16,25 @@ class TicketForm
     {
         return $schema
             ->components([
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('alat_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('ticket_number')
-                    ->required(),
-                TextInput::make('qty')
-                    ->required()
-                    ->numeric()
-                    ->default(1),
-                DateTimePicker::make('booked_at')
-                    ->required(),
-                DateTimePicker::make('borrowed_at'),
-                DatePicker::make('due_at'),
-                DateTimePicker::make('returned_at'),
+                Section::make('Landing Transaction')
+                    ->description('Assign an asset to requester and set the expected return date')
+                    ->schema([
+                        Select::make('user_id')
+                            ->required()
+                            ->label('Peminjam')
+                            ->relationship('user', 'name'),
+                        Select::make('alat_id')
+                            ->required()
+                            ->label('Nama Alat')
+                            ->relationship('alat', 'name'),
+                        DatePicker::make('due_at')
+                        ->label('Due date'),
+                        Textarea::make('note')
+                        ->label('Catatan Tambahan')
+                        ->columnSpanFull(),
+                    ])->columns(3)
+                    ->columnSpanFull(),
+
             ]);
     }
 }
