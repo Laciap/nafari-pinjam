@@ -45,7 +45,23 @@ class TicketsTable
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn(string $state): string=>match($state){
+                        'booked' => 'Reserved',
+                        'borrowed' => 'On Loan',
+                        'verifying' => 'Review',
+                        'returned' => 'Returned',
+                        'cancelled' => 'Cancelled',
+                        default => ucfirst($state)
+                    })
+                    ->color(fn(string $state): string=>match($state){
+                        'booked' => 'info',
+                        'borrowed' => 'success',
+                        'verifying' => 'warning',
+                        'returned' => 'success',
+                        'cancelled' => 'danger',
+                         
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -60,13 +76,22 @@ class TicketsTable
             ])
             ->recordActions([
                 Action::make('approveBorrowing')
-                ->label('Menyetujui Pinjaman')
-                ->color('warning')
+                ->label('Setuju')
+                ->color('success')
                 ->requiresConfirmation()
                 ->visible(fn($record) => $record->status === 'booked')
                 ->action(fn($record) => $record->update([
                     'status' => 'borrowed',
                     'borrowed_at' => now(),    
+                ]))->button(),
+                Action::make('cancelBorrowing')
+                ->label('Batal')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->visible(fn($record) => $record->status === 'booked')
+                ->action(fn($record) => $record->update([
+                    'status' => 'cancelled',
+                       
                 ]))->button(),
                 Action::make('verifyReturn')
                 ->label('Memverifikasi Pengembalian')
