@@ -27,4 +27,11 @@ class Ticket extends Model
         
     return $this->belongsTo(Alat::class);
     }
+
+    public function AlatReturns()
+    {
+
+        return $this->hasMany(AlatReturn::class);
+    }
+    
 }

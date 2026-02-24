@@ -30,5 +30,10 @@ class Alat extends Model
 
         return $this->hasMany(Ticket::class);
     }
+    public function AlatReturns()
+    {
+
+        return $this->hasMany(AlatReturn::class);
+    }
 
 }
